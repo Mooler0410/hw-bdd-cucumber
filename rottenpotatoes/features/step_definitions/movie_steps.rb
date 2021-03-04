@@ -2,10 +2,16 @@
 
 Given /the following movies exist/ do |movies_table|
   movies_table.hashes.each do |movie|
+    #puts Movie
     # each returned element will be a hash whose key is the table header.
     # you should arrange to add that movie to the database here.
+    if Movie.where(:title => movie["title"]).count < 1
+      new_movie = Movie.new( :title => movie["title"], 
+                             :rating => movie["rating"],
+                             :release_date => movie["release_date"])
+      new_movie.save!
+    end
   end
-  fail "Unimplemented"
 end
 
 Then /(.*) seed movies should exist/ do | n_seeds |
