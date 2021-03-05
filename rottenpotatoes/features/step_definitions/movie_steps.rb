@@ -5,12 +5,10 @@ Given /the following movies exist/ do |movies_table|
     #puts Movie
     # each returned element will be a hash whose key is the table header.
     # you should arrange to add that movie to the database here.
-    if Movie.where(:title => movie["title"]).count < 1
-      new_movie = Movie.new( :title => movie["title"], 
+    new_movie = Movie.new( :title => movie["title"], 
                              :rating => movie["rating"],
                              :release_date => movie["release_date"])
-      new_movie.save!
-    end
+    new_movie.save!
   end
 end
 
@@ -31,14 +29,24 @@ end
 #  "When I uncheck the following ratings: PG, G, R"
 #  "When I check the following ratings: G"
 
-When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
+When /I (un)?check the following ratings: (.*)/ do |unck, rating_list|
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
-  fail "Unimplemented"
+  ratings = rating_list.split(',')
+  if unck
+    ratings.each do |r|
+      uncheck("ratings_#{r}")
+    end
+  else
+    ratings.each do |r|
+      check("ratings_#{r}")
+    end
+  end
 end
 
 Then /I should see all the movies/ do
   # Make sure that all the movies in the app are visible in the table
-  fail "Unimplemented"
+  #puts all("table/tbody/tr")
+  Movie.count.should == all("table/tbody/tr").count
 end
